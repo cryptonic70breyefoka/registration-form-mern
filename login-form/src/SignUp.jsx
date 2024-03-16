@@ -1,17 +1,25 @@
 import { useState } from "react";
 import LogIn from "./LogIn";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 export default function SignUp() {
     const[name, setName] = useState()
     const[email, setEmail] = useState()
-    const[pwd, setPwd] = useState()
+    const[password, setPwd] = useState()
     const[cpwd, setCPwd] = useState()
+    const navigate  = useNavigate()
     const handleSubmit  = (event) => {
         event.preventDefault()
-        axios.post('http://localhost:3001/register', {name, email, pwd, cpwd})
-        .then(result => console.log(result))
+        if (password === cpwd) {
+        axios.post('http://localhost:3001/register', {name, email, password})
+        .then(
+            navigate('/login')
+        )
         .catch(err => console.error(err))
+        } else{
+            alert("Passwords do not match")
+        }
+        
     }
   return (
     <div className='d-flex justify-content-center  align-items-center bg-secondary vh-100'>
@@ -46,12 +54,14 @@ export default function SignUp() {
                             placeholder='Enter Your Password' 
                             name='password' className='form-control rounded-0'
                             onChange={(e) => setPwd(e.target.value)} />
-                     <label htmlFor="password">
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="cpwd">
                         <strong>Confirm Password</strong>
                     </label>
                     <input type="password" 
-                            placeholder='Re-Enter Your Password' 
-                            name='password' className='form-control rounded-0'
+                            placeholder='Confirm Your Password' 
+                            name='cpwd' className='form-control rounded-0'
                             onChange={(e) => setCPwd(e.target.value)} />
                 </div>
                 <button type='submit' className='btn btn-success w-100 rounded-5'> Register</button>
